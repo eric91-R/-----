@@ -2,18 +2,141 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>一些偶尔的记录</title>
+    <title>Eric91-R | 个人主页</title>
+    <style>
+        /* --- 全局基础设置 --- */
+        body {
+            background-color: #F0F2F5; /* 高级灰背景 */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* 撑满全屏高度 */
+            margin: 0;
+            transition: background-color 0.5s ease; /* 背景色过渡动画 */
+        }
+
+        /* --- 主卡片容器 --- */
+        .card {
+            background: white;
+            width: 340px;
+            padding: 30px;
+            border-radius: 16px; /* 卡片圆角 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* 立体阴影 */
+            text-align: center;
+            transition: transform 0.3s ease; /* 卡片悬浮动画 */
+        }
+        .card:hover {
+            transform: translateY(-10px); /* 鼠标移上去，卡片上浮 */
+        }
+
+        /* --- 矩形头像 --- */
+        .avatar-container {
+            perspective: 1000px; /* 3D透视效果 */
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            cursor: pointer; /* 鼠标变手型，暗示可点击 */
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px; /* 矩形圆角 */
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            object-fit: cover; /* 防止图片变形 */
+            transition: transform 0.8s; /* 翻转动画时长 */
+            transform-style: preserve-3d;
+        }
+
+        /* 点击后添加的翻转Class */
+        .avatar.flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* --- 文字样式 --- */
+        h1 {
+            font-size: 24px;
+            color: #1D2129;
+            margin: 15px 0 5px;
+            font-weight: 600;
+        }
+
+        .title {
+            color: #4A90E2; /* 主题蓝 */
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .bio {
+            color: #65676B;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* --- 底部信息 --- */
+        .footer {
+            font-size: 12px;
+            color: #8A8D91;
+            border-top: 1px solid #E4E6EB;
+            padding-top: 15px;
+        }
+    </style>
 </head>
 <body>
-    <h1 style="颜色：#2c3e50;文本对齐：居中;margin-top: 50px;">
-        🎉 谢谢你有空来瞄一眼！
-    </h1>
-    
-    <!-- 这里是新增的显示图片的代码 -->
-    <img src="me.jpg" alt="我的头像" style="width:200px;border-radius:50%;margin:20px;border: 2px solid #eee;">
-    
-    <p style="文本对齐：居中;字体大小：18px;颜色：#666;">
-        每一刻都是新的我~
-    
+    <div class="card">
+        <!-- 头像部分：注意这里的 id="myAvatar" 和 onclick="flipImage()" -->
+        <div class="avatar-container">
+            <img id="myAvatar" src="me.jpg" alt="我的头像" class="avatar" onclick="flipImage()">
+        </div>
+        
+        <h1>Eric91-R</h1>
+        <div class="title" id="greeting">探索者 | Explorer</div>
+        
+        <p class="bio">
+            专注于构建优雅的数字体验。<br>
+            每一刻都是新的我，感谢你的来访。
+        </p>
+        
+        <div class="footer">
+            © 2025 Eric91-R. Hosted on GitHub Pages.
+        </div>
+    </div>
+
+    <script>
+        // --- JavaScript 代码 ---
+        
+        // 1. 点击头像翻转效果
+        function flipImage() {
+            var avatar = document.getElementById('myAvatar');
+            avatar.classList.toggle('flipped');
+            
+            // 惊喜：翻转后改变背景色
+            if (avatar.classList.contains('flipped')) {
+                document.body.style.backgroundColor = '#1a1a2e'; // 深色模式
+            } else {
+                document.body.style.backgroundColor = '#F0F2F5'; // 恢复浅色
+            }
+        }
+
+        // 2. 动态问候语（根据时间变化）
+        window.onload = function() {
+            var greetingElement = document.getElementById('greeting');
+            var hour = new Date().getHours();
+            var welcomeText = "";
+
+            if (hour < 12) {
+                welcomeText = "☀️ 早安，探索者";
+            } else if (hour < 18) {
+                welcomeText = "🌤️ 午安，创造者";
+            } else {
+                welcomeText = "🌙 晚安，思考者";
+            }
+            greetingElement.innerText = welcomeText;
+        };
+    </script>
 </body>
 </html>
