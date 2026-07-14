@@ -5,36 +5,68 @@
     <title>Eric91-R | 个人主页</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* --- 全局基础设置 --- */
+        /* ==================== 全局基础设置 ==================== */
+        :root {
+            --bg-light: #F0F2F5;
+            --bg-dark: #1a1a2e;
+            --text-light: #1D2129;
+            --text-dark: #E4E6EB;
+            --card-bg: white;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --accent: #4A90E2;
+            --accent-hover: #357ABD;
+            --border: #E4E6EB;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-light: #1a1a2e;
+            --bg-dark: #F0F2F5;
+            --text-light: #E4E6EB;
+            --text-dark: #1D2129;
+            --card-bg: #16213e;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --border: #2d3748;
+            --accent: #64B5F6;
+            --accent-hover: #42A5F5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: #F0F2F5;
+            background-color: var(--bg-light);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
             display: flex;
             justify-content: center;
-            /* 修复：去掉 align-items: center，让内容从上往下排 */
-            padding: 40px 0; /* 上下留白 */
+            padding: 40px 0;
             min-height: 100vh;
             margin: 0;
-            transition: background-color 0.5s ease;
+            transition: var(--transition);
+            color: var(--text-light);
         }
 
-        /* --- 主卡片容器 --- */
+        /* ==================== 主卡片容器 ==================== */
         .card {
-            background: white;
+            background: var(--card-bg);
             width: 340px;
             padding: 30px;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--card-shadow);
             text-align: center;
-            transition: transform 0.3s ease;
-            /* 防止被挤压 */
+            transition: var(--transition);
             flex-shrink: 0;
+            border: 1px solid var(--border);
         }
         .card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
 
-        /* --- 矩形头像 --- */
+        /* ==================== 矩形头像 ==================== */
         .avatar-container {
             perspective: 1000px;
             width: 120px;
@@ -49,24 +81,24 @@
             border: 3px solid #fff;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             object-fit: cover;
-            transition: transform 0.8s;
+            transition: var(--transition);
             transform-style: preserve-3d;
         }
         .avatar.flipped {
             transform: rotateY(180deg);
         }
 
-        /* --- 文字样式 --- */
-        h1 { font-size: 24px; color: #1D2129; margin: 15px 0 5px; font-weight: 600; }
-        .title { color: #4A90E2; font-size: 14px; font-weight: 500; margin-bottom: 15px; }
-        .bio { color: #65676B; font-size: 14px; line-height: 1.6; margin-bottom: 25px; }
-        .footer { font-size: 12px; color: #8A8D91; border-top: 1px solid #E4E6EB; padding-top: 15px; }
+        /* ==================== 文字样式 ==================== */
+        h1 { font-size: 24px; color: var(--text-light); margin: 15px 0 5px; font-weight: 600; }
+        .title { color: var(--accent); font-size: 14px; font-weight: 500; margin-bottom: 15px; }
+        .bio { color: var(--text-dark); font-size: 14px; line-height: 1.6; margin-bottom: 25px; }
+        .footer { font-size: 12px; color: var(--text-dark); border-top: 1px solid var(--border); padding-top: 15px; }
 
-        /* ===== 图片画廊样式 ===== */
+        /* ==================== 图片画廊样式 ==================== */
         .gallery-section { max-width: 1000px; margin: 40px auto; padding: 0 20px; width: 100%; }
-        .gallery-section h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        .gallery-section h2 { text-align: center; color: var(--text-light); margin-bottom: 20px; font-size: 28px; }
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
-        .gallery-img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; cursor: pointer; transition: transform 0.3s ease; }
+        .gallery-img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; cursor: pointer; transition: var(--transition); }
         .gallery-img:hover { transform: scale(1.05); }
 
         /* 灯箱样式 */
@@ -77,15 +109,256 @@
         /* 功能模块样式 */
         .features-section { max-width: 1000px; margin: 40px auto; padding: 0 20px; width: 100%; }
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .feature-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; transition: transform 0.3s ease; }
+        .feature-card { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: var(--card-shadow); text-align: center; transition: var(--transition); border: 1px solid var(--border); }
         .feature-card:hover { transform: translateY(-5px); }
-        .feature-card h3 { margin: 10px 0 8px; color: #333; font-size: 16px; }
-        .feature-card p { color: #666; font-size: 14px; margin: 5px 0; }
-        .feature-card small { color: #999; font-size: 12px; display: block; margin-top: 8px;}
-        .feature-card a { color: #4A90E2; text-decoration: none; }
+        .feature-card h3 { margin: 10px 0 8px; color: var(--text-light); font-size: 16px; }
+        .feature-card p { color: var(--text-dark); font-size: 14px; margin: 5px 0; }
+        .feature-card small { color: var(--text-dark); font-size: 12px; display: block; margin-top: 8px;}
+        .feature-card a { color: var(--accent); text-decoration: none; }
+
+        /* ==================== 深色模式切换按钮 ==================== */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+            transition: var(--transition);
+        }
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: scale(1.1);
+        }
+
+        /* ==================== 留言板样式 ==================== */
+        .message-board {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            display: none;
+        }
+        .message-board h3 {
+            color: var(--text-light);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .message-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .message-form input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+        .message-form button {
+            padding: 10px 15px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        .message-form button:hover {
+            background: var(--accent-hover);
+        }
+        .message-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            border-top: 1px solid var(--border);
+            margin-top: 10px;
+        }
+        .message-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .message-content {
+            flex: 1;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        .message-delete {
+            background: #E74C3C;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .message-delete:hover {
+            background: #C0392B;
+        }
+        .admin-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 8px;
+            display: none;
+        }
+        .admin-panel h4 {
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        .admin-panel input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+        .admin-panel button {
+            padding: 8px 12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .admin-panel button:hover {
+            background: var(--accent-hover);
+        }
+
+        /* ==================== 图片浏览页样式 ==================== */
+        .image-browser {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            width: 100%;
+            display: none;
+        }
+        .image-browser h2 {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        .image-slider {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            background: var(--card-bg);
+            padding: 20px;
+        }
+        .slider-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 20px;
+            padding: 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .slider-item {
+            scroll-snap-align: start;
+            min-width: 280px;
+            max-width: 350px;
+            background: var(--bg-light);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+        .slider-item:hover {
+            transform: translateY(-5px);
+        }
+        .slider-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        .slider-comment {
+            padding: 15px;
+            color: var(--text-light);
+            font-size: 14px;
+            text-align: center;
+        }
+        .slider-comment-form {
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .slider-comment-form input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+        .slider-comment-form button {
+            padding: 8px 12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .slider-comment-form button:hover {
+            background: var(--accent-hover);
+        }
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        .back-button:hover {
+            background: var(--accent-hover);
+        }
+
+        /* ==================== 响应式设计 ==================== */
+        @media (max-width: 768px) {
+            .card { width: 90%; }
+            .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+            .features-grid { grid-template-columns: 1fr; }
+            .slider-item { min-width: 250px; max-width: 300px; }
+        }
     </style>
 </head>
-<body>
+<body data-theme="light">
+    <!-- 深色模式切换按钮 -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色模式">🌙</button>
+
     <!-- 主卡片 -->
     <div class="card">
         <div class="avatar-container">
@@ -93,7 +366,7 @@
         </div>
         <h1>Eric91-R</h1>
         <div class="title" id="greeting">探索者 | Explorer</div>
-        <p class="bio">专注于构建优雅的数字体验。<br>每一刻都是新的我，感谢你的来访。</p>
+        <p class="bio">专注于构建优雅的数字体验。每一刻都是新的我，感谢你的来访。
         <div class="footer">© 2025 Eric91-R. Hosted on GitHub Pages.</div>
     </div>
 
@@ -101,11 +374,11 @@
     <div class="gallery-section">
         <h2>我的图片集</h2>
         <div class="gallery-grid">
-            <img src="photo1.jpg" alt="图片1" class="gallery-img" onclick="openLightbox('photo1.jpg')">
-            <img src="photo2.jpg" alt="图片2" class="gallery-img" onclick="openLightbox('photo2.jpg')">
-            <img src="photo3.jpg" alt="图片3" class="gallery-img" onclick="openLightbox('photo3.jpg')">
-            <img src="photo4.jpg" alt="图片4" class="gallery-img" onclick="openLightbox('photo4.jpg')">
-            <img src="photo5.jpg" alt="图片5" class="gallery-img" onclick="openLightbox('photo5.jpg')">
+            <img src="photo1.jpg" alt="图片1" class="gallery-img" onclick="openGallery()">
+            <img src="photo2.jpg" alt="图片2" class="gallery-img" onclick="openGallery()">
+            <img src="photo3.jpg" alt="图片3" class="gallery-img" onclick="openGallery()">
+            <img src="photo4.jpg" alt="图片4" class="gallery-img" onclick="openGallery()">
+            <img src="photo5.jpg" alt="图片5" class="gallery-img" onclick="openGallery()">
         </div>
     </div>
 
@@ -120,13 +393,13 @@
         <div class="features-grid">
             <div class="feature-card">
                 <h3>⏰ 实时时间</h3>
-                <p id="current-time">加载中...</p>
+                <p id="current-time">加载中...
                 <small>自动同步本地时间</small>
             </div>
             <div class="feature-card">
                 <h3>👥 访客统计</h3>
-                <p id="visitor-count">0</p>
-                <small>模拟访问量</small>
+                <p id="visitor-count">0
+                <small>真实访问量</small>
             </div>
             <div class="feature-card">
                 <h3>🎵 背景音乐</h3>
@@ -138,61 +411,56 @@
             </div>
             <div class="feature-card">
                 <h3>💬 关于我</h3>
-                <p>Eric91-R | 探索者<br>构建优雅的数字体验</p>
+                Eric91-R | 探索者构建优雅的数字体验
                 <small><a href="https://github.com/eric91-r" target="_blank">🐱 GitHub</a></small>
+            </div>
+            <div class="feature-card">
+                <h3>📝 留言板</h3>
+                <button onclick="openMessageBoard()" style="padding:8px 16px;border:none;border-radius:20px;background:#4A90E2;color:white;cursor:pointer;">点击进入</button>
+                <small>匿名留言 · 管理员可删除</small>
+            </div>
+            <div class="feature-card">
+                <h3>🖼️ 图片浏览</h3>
+                <button onclick="openImageBrowser()" style="padding:8px 16px;border:none;border-radius:20px;background:#4A90E2;color:white;cursor:pointer;">点击进入</button>
+                <small>滑动浏览 · 每张可评论</small>
             </div>
         </div>
     </div>
 
+    <!-- 留言板 -->
+    <div id="message-board" class="message-board">
+        <h3>💬 留言板</h3>
+        <div class="message-form">
+            <input type="text" id="message-input" placeholder="写下你的留言（匿名）..." maxlength="50">
+            <button onclick="submitMessage()">提交</button>
+        </div>
+        <div id="message-list" class="message-list"></div>
+        <div id="admin-panel" class="admin-panel">
+            <h4>🔐 管理员面板</h4>
+            <input type="password" id="admin-password" placeholder="输入管理员密码">
+            <button onclick="verifyAdmin()">验证</button>
+            <div id="admin-controls" style="display:none; margin-top:10px;">
+                <input type="text" id="blocked-word" placeholder="添加敏感词（如：垃圾）">
+                <button onclick="addBlockedWord()">添加</button>
+                <div id="blocked-words-list" style="margin-top:10px; font-size:12px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片浏览页 -->
+    <div id="image-browser" class="image-browser">
+        <h2>🖼️ 图片浏览</h2>
+        <div class="image-slider">
+            <div class="slider-container" id="slider-container">
+                <!-- 图片项将通过 JS 动态生成 -->
+            </div>
+        </div>
+        <button class="back-button" onclick="closeImageBrowser()">← 返回首页</button>
+    </div>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // 1. 点击头像翻转效果
-        function flipImage() {
-            const avatar = document.getElementById('myAvatar');
-            avatar.classList.toggle('flipped');
-            document.body.style.backgroundColor = avatar.classList.contains('flipped') ? '#1a1a2e' : '#F0F2F5';
-        }
-
-        // 2. 动态问候语
-        function updateGreeting() {
-            const hour = new Date().getHours();
-            let text = "🌙 晚安，思考者";
-            if (hour < 12) text = "☀️ 早安，探索者";
-            else if (hour < 18) text = "🌤️ 午安，创造者";
-            document.getElementById('greeting').innerText = text;
-        }
-
-        // 3. 实时时间
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('current-time').innerText =
-                now.toLocaleString('zh-CN', { hour12: false }) + '\n' +
-                now.toLocaleDateString('zh-CN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        }
-
-        // 4. 灯箱功能
-        function openLightbox(src) {
-            document.getElementById('lightbox').style.display = 'flex';
-            document.getElementById('lightbox-img').src = src;
-        }
-        function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
-        }
-
-        // 5. 音乐控制
-        function toggleMusic() {
-            const m = document.getElementById('bg-music');
-            const b = document.getElementById('music-btn');
-            if (m.paused) { m.play(); b.textContent = '暂停'; b.style.background = '#E74C3C'; }
-            else { m.pause(); b.textContent = '播放'; b.style.background = '#4A90E2'; }
-        }
-
-        // 6. 访客计数（模拟）
-        document.getElementById('visitor-count').innerHTML = (Math.floor(Math.random()*9000)+1000).toLocaleString();
-
-        // 初始化
-        updateGreeting();
-        updateTime();
-        setInterval(updateTime, 1000);
-    </script>
-</body>
-</html>
+        // ==================== Supabase 配置 ====================
+        const SUPABASE_URL = 'https://cjmbiavxmionhvchctlif.supabase.co'; // ← 替换为你的 Project URL
+        const SUPABASE_ANON_KEY = 'sb_publishable_ES5Wf2uufFD088bVpzgRtQ_8MGKF5As';
