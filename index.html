@@ -2,465 +2,483 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Eric91-R | 个人主页</title>
+    <title>Eric91-R | Portfolio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* ==================== 全局基础设置 ==================== */
         :root {
-            --bg-light: #F0F2F5;
-            --bg-dark: #1a1a2e;
-            --text-light: #1D2129;
-            --text-dark: #E4E6EB;
-            --card-bg: white;
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --klein-blue: #002FA7; /* 克莱因蓝 */
+            --dark-bg: #0a0a0a;
+            --glass: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
             --accent: #4A90E2;
-            --accent-hover: #357ABD;
-            --border: #E4E6EB;
-            --transition: all 0.3s ease;
         }
 
-        [data-theme="dark"] {
-            --bg-light: #1a1a2e;
-            --bg-dark: #F0F2F5;
-            --text-light: #E4E6EB;
-            --text-dark: #1D2129;
-            --card-bg: #16213e;
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            --border: #2d3748;
-            --accent: #64B5F6;
-            --accent-hover: #42A5F5;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-light);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
-            display: flex;
-            justify-content: center;
-            padding: 40px 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            background: linear-gradient(-45deg, var(--klein-blue), #001f4d, #000814, #000000);
+            background-size: 400% 400%;
+            animation: gradientFlow 18s ease infinite;
+            color: var(--text-primary);
             min-height: 100vh;
-            margin: 0;
-            transition: var(--transition);
-            color: var(--text-light);
+            display: flex;
+            transition: background-color 0.5s ease;
         }
 
-        /* ==================== 主卡片容器 ==================== */
-        .card {
-            background: var(--card-bg);
-            width: 340px;
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body.dark-mode {
+            background: #000;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 30px;
+        }
+
+        /* === 左侧边栏 === */
+        .sidebar {
+            flex: 0 0 320px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
             padding: 30px;
-            border-radius: 16px;
-            box-shadow: var(--card-shadow);
-            text-align: center;
-            transition: var(--transition);
-            flex-shrink: 0;
-            border: 1px solid var(--border);
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255,255,255,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
         }
 
-        /* ==================== 矩形头像 ==================== */
-        .avatar-container {
-            perspective: 1000px;
-            width: 120px;
-            height: 120px;
+        .avatar-wrapper {
+            width: 130px;
+            height: 130px;
             margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--text-primary);
             cursor: pointer;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
-        .avatar {
+
+        .avatar-wrapper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0, 47, 167, 0.7);
+        }
+
+        .avatar-wrapper img {
             width: 100%;
             height: 100%;
-            border-radius: 12px;
-            border: 3px solid #fff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             object-fit: cover;
-            transition: var(--transition);
-            transform-style: preserve-3d;
-        }
-        .avatar.flipped {
-            transform: rotateY(180deg);
         }
 
-        /* ==================== 文字样式 ==================== */
-        h1 { font-size: 24px; color: var(--text-light); margin: 15px 0 5px; font-weight: 600; }
-        .title { color: var(--accent); font-size: 14px; font-weight: 500; margin-bottom: 15px; }
-        .bio { color: var(--text-dark); font-size: 14px; line-height: 1.6; margin-bottom: 25px; }
-        .footer { font-size: 12px; color: var(--text-dark); border-top: 1px solid var(--border); padding-top: 15px; }
-
-        /* ==================== 图片画廊样式 ==================== */
-        .gallery-section { max-width: 1000px; margin: 40px auto; padding: 0 20px; width: 100%; }
-        .gallery-section h2 { text-align: center; color: var(--text-light); margin-bottom: 20px; font-size: 28px; }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
-        .gallery-img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; cursor: pointer; transition: var(--transition); }
-        .gallery-img:hover { transform: scale(1.05); }
-
-        /* 灯箱样式 */
-        .lightbox { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
-        .lightbox-content { max-width: 90%; max-height: 90%; border-radius: 8px; }
-        .close { position: absolute; top: 20px; right: 35px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; }
-
-        /* 功能模块样式 */
-        .features-section { max-width: 1000px; margin: 40px auto; padding: 0 20px; width: 100%; }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .feature-card { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: var(--card-shadow); text-align: center; transition: var(--transition); border: 1px solid var(--border); }
-        .feature-card:hover { transform: translateY(-5px); }
-        .feature-card h3 { margin: 10px 0 8px; color: var(--text-light); font-size: 16px; }
-        .feature-card p { color: var(--text-dark); font-size: 14px; margin: 5px 0; }
-        .feature-card small { color: var(--text-dark); font-size: 12px; display: block; margin-top: 8px;}
-        .feature-card a { color: var(--accent); text-decoration: none; }
-
-        /* ==================== 深色模式切换按钮 ==================== */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 100;
-            transition: var(--transition);
-        }
-        .theme-toggle:hover {
-            background: var(--accent-hover);
-            transform: scale(1.1);
-        }
-
-        /* ==================== 留言板样式 ==================== */
-        .message-board {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--border);
-            display: none;
-        }
-        .message-board h3 {
-            color: var(--text-light);
-            margin-bottom: 15px;
+        .sidebar h1 {
+            font-size: 26px;
             text-align: center;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
-        .message-form {
-            display: flex;
-            gap: 10px;
+
+        .sidebar .title {
+            text-align: center;
+            color: var(--accent);
+            font-size: 14px;
             margin-bottom: 20px;
         }
-        .message-form input {
+
+        .sidebar .bio {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar .stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .stats div span {
+            display: block;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .sidebar .stats div small {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .sidebar .footer {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 20px;
+        }
+
+        /* === 右侧主内容 === */
+        .main-content {
             flex: 1;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 14px;
-            background: var(--bg-light);
-            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
         }
-        .message-form button {
-            padding: 10px 15px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: var(--transition);
-        }
-        .message-form button:hover {
-            background: var(--accent-hover);
-        }
-        .message-list {
-            max-height: 300px;
-            overflow-y: auto;
-            padding: 10px;
-            border-top: 1px solid var(--border);
-            margin-top: 10px;
-        }
-        .message-item {
-            padding: 10px;
-            border-bottom: 1px solid var(--border);
+
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-        .message-content {
-            flex: 1;
-            color: var(--text-light);
-            font-size: 14px;
-        }
-        .message-delete {
-            background: #E74C3C;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .message-delete:hover {
-            background: #C0392B;
-        }
-        .admin-panel {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0,0,0,0.05);
-            border-radius: 8px;
-            display: none;
-        }
-        .admin-panel h4 {
-            color: var(--text-light);
-            margin-bottom: 10px;
-        }
-        .admin-panel input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: var(--bg-light);
-            color: var(--text-light);
-        }
-        .admin-panel button {
-            padding: 8px 12px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .admin-panel button:hover {
-            background: var(--accent-hover);
+            margin-bottom: 15px;
         }
 
-        /* ==================== 图片浏览页样式 ==================== */
-        .image-browser {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
-            width: 100%;
-            display: none;
+        .section-header h2 {
+            font-size: 22px;
+            font-weight: 600;
         }
-        .image-browser h2 {
-            text-align: center;
-            color: var(--text-light);
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-        .image-slider {
-            position: relative;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            background: var(--card-bg);
-            padding: 20px;
-        }
-        .slider-container {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
+
+        /* === 功能网格 === */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
-            padding: 10px;
-            -webkit-overflow-scrolling: touch;
-        }
-        .slider-item {
-            scroll-snap-align: start;
-            min-width: 280px;
-            max-width: 350px;
-            background: var(--bg-light);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: var(--transition);
-        }
-        .slider-item:hover {
-            transform: translateY(-5px);
-        }
-        .slider-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            cursor: pointer;
-        }
-        .slider-comment {
-            padding: 15px;
-            color: var(--text-light);
-            font-size: 14px;
-            text-align: center;
-        }
-        .slider-comment-form {
-            padding: 10px;
-            display: flex;
-            gap: 10px;
-        }
-        .slider-comment-form input {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 14px;
-            background: var(--bg-light);
-            color: var(--text-light);
-        }
-        .slider-comment-form button {
-            padding: 8px 12px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .slider-comment-form button:hover {
-            background: var(--accent-hover);
-        }
-        .back-button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: var(--transition);
-        }
-        .back-button:hover {
-            background: var(--accent-hover);
         }
 
-        /* ==================== 响应式设计 ==================== */
-        @media (max-width: 768px) {
-            .card { width: 90%; }
-            .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+        .feature-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease, background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .feature-card small {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .feature-card button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: var(--accent);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .feature-card button:hover {
+            background: #357ABD;
+        }
+
+        /* === 图片集模块 === */
+        .gallery-module {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+            filter: brightness(0.7);
+        }
+
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            font-size: 12px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .overlay {
+            transform: translateY(0);
+        }
+
+        /* === 主题切换按钮 === */
+        .theme-switcher {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-switcher:hover {
+            transform: rotate(30deg) scale(1.1);
+        }
+
+        /* === 响应式 === */
+        @media (max-width: 900px) {
+            .container { flex-direction: column; }
+            .sidebar { position: static; width: 100%; }
             .features-grid { grid-template-columns: 1fr; }
-            .slider-item { min-width: 250px; max-width: 300px; }
         }
     </style>
 </head>
-<body data-theme="light">
-    <!-- 深色模式切换按钮 -->
-    <button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色模式">🌙</button>
+<body>
+    <!-- 主题切换按钮 -->
+    <div class="theme-switcher" id="themeSwitcher" title="切换主题">🌙</div>
 
-    <!-- 主卡片 -->
-    <div class="card">
-        <div class="avatar-container">
-            <img id="myAvatar" src="me.jpg" alt="我的头像" class="avatar" onclick="flipImage()">
-        </div>
-        <h1>Eric91-R</h1>
-        <div class="title" id="greeting">探索者 | Explorer</div>
-        <p class="bio">专注于构建优雅的数字体验。每一刻都是新的我，感谢你的来访。
-        <div class="footer">© 2025 Eric91-R. Hosted on GitHub Pages.</div>
-    </div>
+    <div class="container">
+        <!-- 左侧边栏 -->
+        <aside class="sidebar">
+            <a href="#about" id="avatarLink">
+                <div class="avatar-wrapper">
+                    <img src="me.jpg" alt="Eric91-R">
+                </div>
+            </a>
+            <h1>Eric91-R</h1>
+            <div class="title">数字探索者 / Developer</div>
+            <div class="bio">
+                专注于构建优雅的数字体验。<br>
+                相信每一刻都是新的开始。<br>
+                <strong>[此处填写你的个人简介，例如：毕业于XX大学，擅长前端交互与UI设计]</strong>
+            </div>
+            <div class="stats">
+                <div>
+                    <span id="visitorCount">0</span>
+                    <small>访客</small>
+                </div>
+                <div>
+                    <span id="projectCount">5</span>
+                    <small>作品</small>
+                </div>
+            </div>
+            <div class="footer">
+                © 2025 Eric91-R<br>
+                Hosted on GitHub Pages
+            </div>
+        </aside>
 
-    <!-- 图片画廊 -->
-    <div class="gallery-section">
-        <h2>我的图片集</h2>
-        <div class="gallery-grid">
-            <img src="photo1.jpg" alt="图片1" class="gallery-img" onclick="openGallery()">
-            <img src="photo2.jpg" alt="图片2" class="gallery-img" onclick="openGallery()">
-            <img src="photo3.jpg" alt="图片3" class="gallery-img" onclick="openGallery()">
-            <img src="photo4.jpg" alt="图片4" class="gallery-img" onclick="openGallery()">
-            <img src="photo5.jpg" alt="图片5" class="gallery-img" onclick="openGallery()">
-        </div>
+        <!-- 右侧主内容 -->
+        <main class="main-content">
+            <!-- 功能卡片区 -->
+            <section>
+                <div class="section-header"><h2>功能中心</h2></div>
+                <div class="features-grid">
+                    <div class="feature-card" onclick="openMessageBoard()">
+                        <h3>💬 留言板</h3>
+                        <p>互动</p>
+                        <small>点击进入留言</small>
+                        <button>进入</button>
+                    </div>
+                    <div class="feature-card" onclick="openGalleryPage()">
+                        <h3>🖼️ 图片集</h3>
+                        <p>浏览</p>
+                        <small>滑动查看大图</small>
+                        <button>浏览</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>⏰ 实时时间</h3>
+                        <p id="currentTime">--:--:--</p>
+                        <small id="currentDate">加载中...</small>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🎵 背景音乐</h3>
+                        <p id="musicStatus">暂停</p>
+                        <small>点击控制播放</small>
+                        <button id="musicBtn">播放</button>
+                        <audio id="bgMusic" loop>
+                            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                        </audio>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 图片集模块 -->
+            <section class="gallery-module">
+                <div class="section-header"><h2>精选图片</h2></div>
+                <div class="gallery-grid">
+                    <div class="gallery-item" onclick="openLightbox('photo1.jpg')">
+                        <img src="photo1.jpg" alt="Photo 1">
+                        <div class="overlay">光影瞬间 1</div>
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('photo2.jpg')">
+                        <img src="photo2.jpg" alt="Photo 2">
+                        <div class="overlay">光影瞬间 2</div>
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('photo3.jpg')">
+                        <img src="photo3.jpg" alt="Photo 3">
+                        <div class="overlay">光影瞬间 3</div>
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('photo4.jpg')">
+                        <img src="photo4.jpg" alt="Photo 4">
+                        <div class="overlay">光影瞬间 4</div>
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('photo5.jpg')">
+                        <img src="photo5.jpg" alt="Photo 5">
+                        <div class="overlay">光影瞬间 5</div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
     <!-- 灯箱 -->
-    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-        <span class="close">&times;</span>
-        <img id="lightbox-img" class="lightbox-content" src="" alt="灯箱图片">
-    </div>
-
-    <!-- 功能模块 -->
-    <div class="features-section">
-        <div class="features-grid">
-            <div class="feature-card">
-                <h3>⏰ 实时时间</h3>
-                <p id="current-time">加载中...
-                <small>自动同步本地时间</small>
-            </div>
-            <div class="feature-card">
-                <h3>👥 访客统计</h3>
-                <p id="visitor-count">0
-                <small>真实访问量</small>
-            </div>
-            <div class="feature-card">
-                <h3>🎵 背景音乐</h3>
-                <button id="music-btn" onclick="toggleMusic()" style="padding:8px 16px;border:none;border-radius:20px;background:#4A90E2;color:white;cursor:pointer;">播放</button>
-                <audio id="bg-music" loop>
-                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-                </audio>
-                <small>示例音乐</small>
-            </div>
-            <div class="feature-card">
-                <h3>💬 关于我</h3>
-                Eric91-R | 探索者构建优雅的数字体验
-                <small><a href="https://github.com/eric91-r" target="_blank">🐱 GitHub</a></small>
-            </div>
-            <div class="feature-card">
-                <h3>📝 留言板</h3>
-                <button onclick="openMessageBoard()" style="padding:8px 16px;border:none;border-radius:20px;background:#4A90E2;color:white;cursor:pointer;">点击进入</button>
-                <small>匿名留言 · 管理员可删除</small>
-            </div>
-            <div class="feature-card">
-                <h3>🖼️ 图片浏览</h3>
-                <button onclick="openImageBrowser()" style="padding:8px 16px;border:none;border-radius:20px;background:#4A90E2;color:white;cursor:pointer;">点击进入</button>
-                <small>滑动浏览 · 每张可评论</small>
-            </div>
-        </div>
-    </div>
-
-    <!-- 留言板 -->
-    <div id="message-board" class="message-board">
-        <h3>💬 留言板</h3>
-        <div class="message-form">
-            <input type="text" id="message-input" placeholder="写下你的留言（匿名）..." maxlength="50">
-            <button onclick="submitMessage()">提交</button>
-        </div>
-        <div id="message-list" class="message-list"></div>
-        <div id="admin-panel" class="admin-panel">
-            <h4>🔐 管理员面板</h4>
-            <input type="password" id="admin-password" placeholder="输入管理员密码">
-            <button onclick="verifyAdmin()">验证</button>
-            <div id="admin-controls" style="display:none; margin-top:10px;">
-                <input type="text" id="blocked-word" placeholder="添加敏感词（如：垃圾）">
-                <button onclick="addBlockedWord()">添加</button>
-                <div id="blocked-words-list" style="margin-top:10px; font-size:12px;"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 图片浏览页 -->
-    <div id="image-browser" class="image-browser">
-        <h2>🖼️ 图片浏览</h2>
-        <div class="image-slider">
-            <div class="slider-container" id="slider-container">
-                <!-- 图片项将通过 JS 动态生成 -->
-            </div>
-        </div>
-        <button class="back-button" onclick="closeImageBrowser()">← 返回首页</button>
+    <div id="lightbox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center;" onclick="this.style.display='none'">
+        <img id="lightboxImg" src="" style="max-width:90%; max-height:90%; border-radius:12px;">
     </div>
 
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ==================== Supabase 配置 ====================
-        const SUPABASE_URL = 'https://cjmbiavxmionhvchctlif.supabase.co'; // ← 替换为你的 Project URL
-        const SUPABASE_ANON_KEY = 'sb_publishable_ES5Wf2uufFD088bVpzgRtQ_8MGKF5As';
+        // === Supabase 配置（请务必替换成你的密钥）===
+        const SUPABASE_URL = 'https://cjmbiavxmionhvchctlif.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_ES5Wf2uufFD088bVpzgRtQ_8MGKF...'; // <-- 换成你的真实密钥
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // === 1. 深色模式切换（核心修复）===
+        const themeSwitcher = document.getElementById('themeSwitcher');
+        themeSwitcher.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            themeSwitcher.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // 加载时恢复主题
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeSwitcher.textContent = '☀️';
+        }
+
+        // === 2. 实时时间 ===
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('zh-CN', {hour12: false});
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // === 3. 背景音乐 ===
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicStatus = document.getElementById('musicStatus');
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (music.paused) {
+                music.play();
+                musicBtn.textContent = '暂停';
+                musicStatus.textContent = '播放中';
+            } else {
+                music.pause();
+                musicBtn.textContent = '播放';
+                musicStatus.textContent = '暂停';
+            }
+        });
+
+        // === 4. 访客统计（真实）===
+        async function recordVisit() {
+            try {
+                await supabase.from('visitors').insert({ page: 'home' });
+                const { count } = await supabase.from('visitors').select('*', { count: 'exact', head: true });
+                document.getElementById('visitorCount').textContent = count || 0;
+            } catch (e) {
+                console.error('访客记录失败:', e);
+                document.getElementById('visitorCount').textContent = 'N/A';
+            }
+        }
+        recordVisit();
+
+        // === 5. 灯箱 ===
+        function openLightbox(src) {
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lightboxImg').src = src;
+            lb.style.display = 'flex';
+        }
+
+        // === 6. 页面跳转（预留）===
+        function openMessageBoard() {
+            alert('留言板页面开发中...\n\n你可以后续创建 message.html 并在这里跳转。\n\n管理员删除功能需在 Supabase 中配置 RLS 策略。');
+            // window.location.href = '/message.html';
+        }
+
+        function openGalleryPage() {
+            alert('图片浏览页面开发中...\n\n你可以后续创建 gallery.html 并在这里跳转。\n\n滑动效果和评论功能将在此实现。');
+            // window.location.href = '/gallery.html';
+        }
+
+        // === 7. 头像点击 ===
+        document.getElementById('avatarLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('个人简介页面\n\n这里可以跳转到 about.html。\n\n你可以在此填写详细的个人经历、技能栈和联系方式。');
+            // window.location.href = '/about.html';
+        });
+    </script>
+</body>
+</html>
