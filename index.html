@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Eric91-R | 个人主页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* --- 全局基础设置 --- */
         body {
-            background-color: #F0F2F5; /* 高级灰背景 */
+            background-color: #F0F2F5;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh; /* 撑满全屏高度 */
+            /* 修复：去掉 align-items: center，让内容从上往下排 */
+            padding: 40px 0; /* 上下留白 */
+            min-height: 100vh;
             margin: 0;
-            transition: background-color 0.5s ease; /* 背景色过渡动画 */
+            transition: background-color 0.5s ease;
         }
 
         /* --- 主卡片容器 --- */
@@ -21,122 +23,176 @@
             background: white;
             width: 340px;
             padding: 30px;
-            border-radius: 16px; /* 卡片圆角 */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* 立体阴影 */
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
-            transition: transform 0.3s ease; /* 卡片悬浮动画 */
+            transition: transform 0.3s ease;
+            /* 防止被挤压 */
+            flex-shrink: 0;
         }
         .card:hover {
-            transform: translateY(-10px); /* 鼠标移上去，卡片上浮 */
+            transform: translateY(-10px);
         }
 
         /* --- 矩形头像 --- */
         .avatar-container {
-            perspective: 1000px; /* 3D透视效果 */
+            perspective: 1000px;
             width: 120px;
             height: 120px;
             margin: 0 auto 20px;
-            cursor: pointer; /* 鼠标变手型，暗示可点击 */
+            cursor: pointer;
         }
-
         .avatar {
             width: 100%;
             height: 100%;
-            border-radius: 12px; /* 矩形圆角 */
+            border-radius: 12px;
             border: 3px solid #fff;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            object-fit: cover; /* 防止图片变形 */
-            transition: transform 0.8s; /* 翻转动画时长 */
+            object-fit: cover;
+            transition: transform 0.8s;
             transform-style: preserve-3d;
         }
-
-        /* 点击后添加的翻转Class */
         .avatar.flipped {
             transform: rotateY(180deg);
         }
 
         /* --- 文字样式 --- */
-        h1 {
-            font-size: 24px;
-            color: #1D2129;
-            margin: 15px 0 5px;
-            font-weight: 600;
-        }
+        h1 { font-size: 24px; color: #1D2129; margin: 15px 0 5px; font-weight: 600; }
+        .title { color: #4A90E2; font-size: 14px; font-weight: 500; margin-bottom: 15px; }
+        .bio { color: #65676B; font-size: 14px; line-height: 1.6; margin-bottom: 25px; }
+        .footer { font-size: 12px; color: #8A8D91; border-top: 1px solid #E4E6EB; padding-top: 15px; }
 
-        .title {
-            color: #4A90E2; /* 主题蓝 */
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 15px;
-        }
+        /* ===== 图片画廊样式 ===== */
+        .gallery-section { max-width: 1000px; margin: 40px auto; padding: 0 20px; width: 100%; }
+        .gallery-section h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .gallery-img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; cursor: pointer; transition: transform 0.3s ease; }
+        .gallery-img:hover { transform: scale(1.05); }
 
-        .bio {
-            color: #65676B;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
+        /* 灯箱样式 */
+        .lightbox { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .lightbox-content { max-width: 90%; max-height: 90%; border-radius: 8px; }
+        .close { position: absolute; top: 20px; right: 35px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; }
 
-        /* --- 底部信息 --- */
-        .footer {
-            font-size: 12px;
-            color: #8A8D91;
-            border-top: 1px solid #E4E6EB;
-            padding-top: 15px;
-        }
+        /* 功能模块样式 */
+        .features-section { max-width: 1000px; margin: 40px auto; padding: 0 20px; width: 100%; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .feature-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; transition: transform 0.3s ease; }
+        .feature-card:hover { transform: translateY(-5px); }
+        .feature-card h3 { margin: 10px 0 8px; color: #333; font-size: 16px; }
+        .feature-card p { color: #666; font-size: 14px; margin: 5px 0; }
+        .feature-card small { color: #999; font-size: 12px; display: block; margin-top: 8px;}
+        .feature-card a { color: #4A90E2; text-decoration: none; }
     </style>
 </head>
 <body>
+    <!-- 主卡片 -->
     <div class="card">
-        <!-- 头像部分：注意这里的 id="myAvatar" 和 onclick="flipImage()" -->
         <div class="avatar-container">
             <img id="myAvatar" src="me.jpg" alt="我的头像" class="avatar" onclick="flipImage()">
         </div>
-        
         <h1>Eric91-R</h1>
         <div class="title" id="greeting">探索者 | Explorer</div>
-        
-        <p class="bio">
-            专注于构建优雅的数字体验。<br>
-            每一刻都是新的我，感谢你的来访。
-        </p>
-        
-        <div class="footer">
-            © 2025 Eric91-R. Hosted on GitHub Pages.
+        <p class="bio">专注于构建优雅的数字体验。<br>每一刻都是新的我，感谢你的来访。</p>
+        <div class="footer">© 2025 Eric91-R. Hosted on GitHub Pages.</div>
+    </div>
+
+    <!-- 图片画廊 -->
+    <div class="gallery-section">
+        <h2>我的图片集</h2>
+        <div class="gallery-grid">
+            <img src="photo1.jpg" alt="图片1" class="gallery-img" onclick="openLightbox('photo1.jpg')">
+            <img src="photo2.jpg" alt="图片2" class="gallery-img" onclick="openLightbox('photo2.jpg')">
+            <img src="photo3.jpg" alt="图片3" class="gallery-img" onclick="openLightbox('photo3.jpg')">
+            <img src="photo4.jpg" alt="图片4" class="gallery-img" onclick="openLightbox('photo4.jpg')">
+            <img src="photo5.jpg" alt="图片5" class="gallery-img" onclick="openLightbox('photo5.jpg')">
+        </div>
+    </div>
+
+    <!-- 灯箱 -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close">&times;</span>
+        <img id="lightbox-img" class="lightbox-content" src="" alt="灯箱图片">
+    </div>
+
+    <!-- 功能模块 -->
+    <div class="features-section">
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>⏰ 实时时间</h3>
+                <p id="current-time">加载中...</p>
+                <small>自动同步本地时间</small>
+            </div>
+            <div class="feature-card">
+                <h3>👥 访客统计</h3>
+                <p id="visitor-count">0</p>
+                <small>模拟访问量</small>
+            </div>
+            <div class="feature-card">
+                <h3>🎵 背景音乐</h3>
+                <button id="music-btn" onclick="toggleMusic()" style="padding:8px 16px;border:none;border-radius:20px;background:#4A90E2;color:white;cursor:pointer;">播放</button>
+                <audio id="bg-music" loop>
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                </audio>
+                <small>示例音乐</small>
+            </div>
+            <div class="feature-card">
+                <h3>💬 关于我</h3>
+                <p>Eric91-R | 探索者<br>构建优雅的数字体验</p>
+                <small><a href="https://github.com/eric91-r" target="_blank">🐱 GitHub</a></small>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- JavaScript 代码 ---
-        
         // 1. 点击头像翻转效果
         function flipImage() {
-            var avatar = document.getElementById('myAvatar');
+            const avatar = document.getElementById('myAvatar');
             avatar.classList.toggle('flipped');
-            
-            // 惊喜：翻转后改变背景色
-            if (avatar.classList.contains('flipped')) {
-                document.body.style.backgroundColor = '#1a1a2e'; // 深色模式
-            } else {
-                document.body.style.backgroundColor = '#F0F2F5'; // 恢复浅色
-            }
+            document.body.style.backgroundColor = avatar.classList.contains('flipped') ? '#1a1a2e' : '#F0F2F5';
         }
 
-        // 2. 动态问候语（根据时间变化）
-        window.onload = function() {
-            var greetingElement = document.getElementById('greeting');
-            var hour = new Date().getHours();
-            var welcomeText = "";
+        // 2. 动态问候语
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            let text = "🌙 晚安，思考者";
+            if (hour < 12) text = "☀️ 早安，探索者";
+            else if (hour < 18) text = "🌤️ 午安，创造者";
+            document.getElementById('greeting').innerText = text;
+        }
 
-            if (hour < 12) {
-                welcomeText = "☀️ 早安，探索者";
-            } else if (hour < 18) {
-                welcomeText = "🌤️ 午安，创造者";
-            } else {
-                welcomeText = "🌙 晚安，思考者";
-            }
-            greetingElement.innerText = welcomeText;
-        };
+        // 3. 实时时间
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').innerText =
+                now.toLocaleString('zh-CN', { hour12: false }) + '\n' +
+                now.toLocaleDateString('zh-CN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        // 4. 灯箱功能
+        function openLightbox(src) {
+            document.getElementById('lightbox').style.display = 'flex';
+            document.getElementById('lightbox-img').src = src;
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        // 5. 音乐控制
+        function toggleMusic() {
+            const m = document.getElementById('bg-music');
+            const b = document.getElementById('music-btn');
+            if (m.paused) { m.play(); b.textContent = '暂停'; b.style.background = '#E74C3C'; }
+            else { m.pause(); b.textContent = '播放'; b.style.background = '#4A90E2'; }
+        }
+
+        // 6. 访客计数（模拟）
+        document.getElementById('visitor-count').innerHTML = (Math.floor(Math.random()*9000)+1000).toLocaleString();
+
+        // 初始化
+        updateGreeting();
+        updateTime();
+        setInterval(updateTime, 1000);
     </script>
 </body>
 </html>
