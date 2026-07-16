@@ -3,275 +3,631 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eric91-R - 数字探索者</title>
+    <title>Eric91-R - 构建优雅的数字体验</title>
     <style>
-        /* 极简深色风格，适配移动端 */
         :root {
-            --bg: #0a0a0f;
-            --card: #1a1a24;
-            --text: #e0e0e0;
+            --bg-color: #050f1f;
+            --card-bg: #0d1a2d;
+            --text-color: #e0e6ed;
             --accent: #00d4ff;
-            --border: #2a2a3a;
+            --border: #1e3a5f;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
             min-height: 100vh;
             padding: 20px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 30px; }
-        h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        .tagline { color: var(--accent); font-size: 1.1rem; }
-
-        /* 卡片网格 */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 1px solid var(--border);
             margin-bottom: 30px;
         }
-        .card {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border);
-            transition: transform 0.2s, box-shadow 0.2s;
+        
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            margin-bottom: 15px;
+            object-fit: cover;
             cursor: pointer;
+            transition: transform 0.3s;
         }
-        .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,212,255,0.1); }
-        .card h2 { font-size: 1.2rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .card p { color: #aaa; font-size: 0.95rem; }
-
-        /* 按钮 */
+        
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .subtitle {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #8899a6;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1);
+            border-color: var(--accent);
+        }
+        
+        .card-icon {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .card-desc {
+            font-size: 0.95rem;
+            color: #8899a6;
+            margin-bottom: 15px;
+        }
+        
+        .card-status {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
         .btn {
+            display: inline-block;
+            padding: 10px 20px;
             background: var(--accent);
             color: #000;
             border: none;
-            padding: 10px 20px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
-            transition: opacity 0.2s;
+            text-decoration: none;
+            transition: all 0.3s;
         }
-        .btn:hover { opacity: 0.9; }
-
-        /* 时间显示 */
-        .time-display { font-size: 1.5rem; font-weight: bold; color: var(--accent); margin-top: 10px; }
-        .date-display { font-size: 0.9rem; color: #aaa; margin-top: 5px; }
-
-        /* 音乐状态 */
-        .music-status { margin-top: 10px; font-size: 0.9rem; color: #aaa; }
-
-        /* 访客数 */
-        .visitor-count { font-size: 1.5rem; font-weight: bold; color: var(--accent); margin-top: 10px; }
-
-        /* 模态框（弹窗） */
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .feature-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #8899a6;
+            font-size: 0.9rem;
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+        
+        /* 模态框样式 */
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
-        .modal.active { display: flex; }
+        
+        .modal.active {
+            display: flex;
+        }
+        
         .modal-content {
-            background: var(--card);
-            border-radius: 12px;
+            background: var(--card-bg);
+            border-radius: 15px;
             padding: 30px;
             max-width: 500px;
-            width: 100%;
+            width: 90%;
             position: relative;
             border: 1px solid var(--border);
         }
+        
         .modal-close {
             position: absolute;
-            top: 15px; right: 15px;
-            background: none;
-            border: none;
-            color: #aaa;
+            top: 15px;
+            right: 15px;
             font-size: 1.5rem;
             cursor: pointer;
+            color: #8899a6;
+            background: none;
+            border: none;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
-        .modal h2 { margin-bottom: 20px; }
-        .modal p { margin-bottom: 15px; }
-
-        /* 留言板 */
-        #messageInput { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: #0f0f18; color: var(--text); margin-bottom: 10px; }
-        #messageList { max-height: 300px; overflow-y: auto; margin-top: 20px; }
-        .message-item { background: #0f0f18; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border); }
-        .message-item small { color: #888; display: block; margin-top: 5px; }
-
-        /* 图片集 */
-        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
-        .gallery-item { position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
-        .gallery-item .comment { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); padding: 5px; font-size: 0.8rem; text-align: center; }
-
-        /* 移动端优化 */
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .message-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .message-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .message-content {
+            margin-bottom: 5px;
+        }
+        
+        .message-time {
+            font-size: 0.8rem;
+            color: #8899a6;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .input-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* 移动端适配 */
         @media (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            .grid { grid-template-columns: 1fr; }
-            .gallery-grid { grid-template-columns: 1fr; }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .avatar {
+                width: 100px;
+                height: 100px;
+            }
+        }
+        
+        /* 实时时间样式 */
+        #currentTime {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+        
+        #currentDate {
+            font-size: 0.9rem;
+            color: #8899a6;
+        }
+        
+        /* 音乐控制 */
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .music-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        /* 访客统计 */
+        .visitor-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+        
+        /* 精选图片 */
+        .featured-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .view-more {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .view-more:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <img src="https://picsum.photos/200/200?random=1" alt="Eric91-R" class="avatar" onclick="alert('点击头像可以跳转到个人简介页！')">
             <h1>Eric91-R</h1>
-            <div class="tagline">构建优雅的数字体验</div>
+            <p class="subtitle">构建优雅的数字体验
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">访客</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">作品</div>
+                </div>
+            </div>
         </header>
 
-        <div class="grid">
+        <div class="cards-grid">
             <!-- 实时时间 -->
-            <div class="card" onclick="showTime()">
-                <h2>⏰ 实时时间</h2>
-                <div class="time-display" id="currentTime">--:--:--</div>
-                <div class="date-display" id="currentDate">----年--月--日</div>
+            <div class="card" onclick="showTimeModal()">
+                <div class="card-icon">🕒</div>
+                <div class="card-title">实时时间</div>
+                <div class="card-desc">当前系统时间</div>
+                <div class="card-status" id="timeStatus">加载中...</div>
             </div>
 
             <!-- 背景音乐 -->
             <div class="card" onclick="toggleMusic()">
-                <h2>🎵 背景音乐</h2>
-                <div class="music-status" id="musicStatus">点击播放</div>
-                <audio id="bgMusic" loop>
-                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-                </audio>
+                <div class="card-icon">🎵</div>
+                <div class="card-title">背景音乐</div>
+                <div class="card-desc">点击控制播放状态</div>
+                <div class="card-status" id="musicStatus">暂停中</div>
             </div>
 
             <!-- 访客统计 -->
-            <div class="card" onclick="showVisitors()">
-                <h2>👥 访客统计</h2>
-                <div class="visitor-count" id="visitorCount">...</div>
-                <p style="font-size:0.85rem;color:#888;">累计访问次数
+            <div class="card" onclick="showVisitorModal()">
+                <div class="card-icon">👥</div>
+                <div class="card-title">访客统计</div>
+                <div class="card-desc">累计访问次数</div>
+                <div class="card-status" id="visitorCount">...</div>
             </div>
 
             <!-- 留言板 -->
-            <div class="card" onclick="openMessageModal()">
-                <h2>💬 留言板</h2>
-                <p style="font-size:0.9rem;color:#aaa;">匿名留言，管理员可审核。
-                <button class="btn" onclick="openMessageModal(event)">进入留言板</button>
+            <div class="card" onclick="showMessageModal()">
+                <div class="card-icon">💬</div>
+                <div class="card-title">留言板</div>
+                <div class="card-desc">点击进入，匿名留言，管理员可审核</div>
+                <div class="card-status">点击进入</div>
             </div>
 
             <!-- 图片集 -->
-            <div class="card" onclick="openGalleryModal()">
-                <h2>🖼️ 图片集</h2>
-                <p style="font-size:0.9rem;color:#aaa;">精选图片，点击查看大图。
-                <button class="btn" onclick="openGalleryModal(event)">去看更多照片</button>
+            <div class="card" onclick="showGalleryModal()">
+                <div class="card-icon">🖼️</div>
+                <div class="card-title">图片集</div>
+                <div class="card-desc">滑动查看大图</div>
+                <div class="card-status">点击浏览</div>
             </div>
 
-            <!-- 个人简介（可选，你可替换） -->
-            <div class="card">
-                <h2>👤 关于我</h2>
-                数字探索者 / Developer
-                专注于构建优雅的数字体验。
+            <!-- 精选图片 -->
+            <div class="card" onclick="showFeaturedModal()">
+                <div class="card-icon">📸</div>
+                <div class="card-title">精选图片</div>
+                <div class="card-desc">一张封面，更多点击进入</div>
+                <div class="card-status">查看详情</div>
             </div>
         </div>
 
-        <!-- 留言板模态框 -->
-        <div class="modal" id="messageModal" onclick="closeModal('messageModal', event)">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <button class="modal-close" onclick="closeModal('messageModal')">&times;</button>
-                <h2>💬 留言板</h2>
-                <input type="text" id="messageInput" placeholder="写下你的留言...">
+        <!-- 精选图片展示 -->
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div class="feature-icon">🌄</div>
+                <h3>精选图片</h3>
+                <img src="https://picsum.photos/400/300?random=1" alt="精选图片" class="featured-image">
+                <a href="#" class="view-more">去看更多照片 →</a>
+            </div>
+        </div>
+
+        <footer>
+            © 2025 Eric91-R | Hosted on GitHub Pages
+        </footer>
+    </div>
+
+    <!-- 时间模态框 -->
+    <div class="modal" id="timeModal" onclick="closeModal('timeModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal('timeModal')">&times;</button>
+            <h2 class="modal-title">🕒 实时时间</h2>
+            <div class="modal-body">
+                <div id="currentTime" style="font-size: 2rem; text-align: center; margin: 20px 0;"></div>
+                <div id="currentDate" style="text-align: center; color: #8899a6;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 留言板模态框 -->
+    <div class="modal" id="messageModal" onclick="closeModal('messageModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal('messageModal')">&times;</button>
+            <h2 class="modal-title">💬 留言板</h2>
+            <div class="modal-body">
+                <div class="message-list" id="messageList">
+                    <p style="text-align: center; color: #8899a6;">暂无留言，快来第一条吧！
+                </div>
+                <div class="input-group">
+                    <textarea id="messageInput" placeholder="写下你的留言..."></textarea>
+                </div>
                 <button class="btn" onclick="postMessage()">提交留言</button>
-                <div id="messageList"></div>
             </div>
         </div>
+    </div>
 
-        <!-- 图片集模态框 -->
-        <div class="modal" id="galleryModal" onclick="closeModal('galleryModal', event)">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <button class="modal-close" onclick="closeModal('galleryModal')">&times;</button>
-                <h2>🖼️ 图片集</h2>
+    <!-- 图片集模态框 -->
+    <div class="modal" id="galleryModal" onclick="closeModal('galleryModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal('galleryModal')">&times;</button>
+            <h2 class="modal-title">🖼️ 图片集</h2>
+            <div class="modal-body">
                 <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <img src="https://picsum.photos/600/400?random=1" alt="图片1">
-                        <div class="comment">山间晨雾</div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://picsum.photos/600/400?random=2" alt="图片2">
-                        <div class="comment">海边日落</div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://picsum.photos/600/400?random=3" alt="图片3">
-                        <div class="comment">城市夜景</div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://picsum.photos/600/400?random=4" alt="图片4">
-                        <div class="comment">静物特写</div>
-                    </div>
+                    <div class="gallery-item"><img src="https://picsum.photos/300/300?random=1" alt="图片1"></div>
+                    <div class="gallery-item"><img src="https://picsum.photos/300/300?random=2" alt="图片2"></div>
+                    <div class="gallery-item"><img src="https://picsum.photos/300/300?random=3" alt="图片3"></div>
+                    <div class="gallery-item"><img src="https://picsum.photos/300/300?random=4" alt="图片4"></div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 访客统计模态框 -->
+    <div class="modal" id="visitorModal" onclick="closeModal('visitorModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal('visitorModal')">&times;</button>
+            <h2 class="modal-title">👥 访客统计</h2>
+            <div class="modal-body">
+                <div class="visitor-count" id="visitorCountModal">0</div>
+                <p style="text-align: center; color: #8899a6;">累计访问次数
+                <p style="text-align: center; color: #8899a6; margin-top: 20px;">（此为模拟数据，可接入真实统计）
+            </div>
+        </div>
+    </div>
+
+    <!-- 精选图片模态框 -->
+    <div class="modal" id="featuredModal" onclick="closeModal('featuredModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal('featuredModal')">&times;</button>
+            <h2 class="modal-title">📸 精选图片</h2>
+            <div class="modal-body">
+                <img src="https://picsum.photos/600/400?random=1" alt="精选图片" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
+                <p style="text-align: center; color: #8899a6;">这是精选图片的详细展示页面。
+                <a href="#" class="view-more" style="display: block; text-align: center; margin-top: 15px;">查看更多精选照片 →</a>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // === 1. 实时时间（每秒刷新）===
+        // === 全局变量 ===
+        let isMusicPlaying = false;
+        let visitorCount = 0;
+        let messages = [];
+
+        // === 1. 实时时间 ===
         function updateTime() {
             const now = new Date();
-            document.getElementById('currentTime').textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+            const timeString = now.toLocaleTimeString('zh-CN', { hour12: false });
+            const dateString = now.toLocaleDateString('zh-CN', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('currentTime').textContent = timeString;
+            document.getElementById('currentDate').textContent = dateString;
+            document.getElementById('timeStatus').textContent = timeString;
         }
+
+        // 每秒更新时间
         setInterval(updateTime, 1000);
         updateTime(); // 立即执行一次
 
         // === 2. 背景音乐控制 ===
-        const music = document.getElementById('bgMusic');
-        const musicStatus = document.getElementById('musicStatus');
-        let isPlaying = false;
-
         function toggleMusic() {
-            if (isPlaying) {
-                music.pause();
-                musicStatus.textContent = '点击播放';
-                isPlaying = false;
+            const music = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+            music.loop = true;
+            music.volume = 0.3;
+
+            if (!isMusicPlaying) {
+                music.play().catch(e => console.log('播放失败，可能是浏览器限制'));
+                isMusicPlaying = true;
+                document.getElementById('musicStatus').textContent = '播放中';
             } else {
-                music.play().catch(e => {
-                    console.log('播放失败，可能是浏览器限制，请手动点击播放');
-                    musicStatus.textContent = '点击播放（需手动）';
-                });
-                musicStatus.textContent = '播放中...';
-                isPlaying = true;
+                music.pause();
+                isMusicPlaying = false;
+                document.getElementById('musicStatus').textContent = '暂停中';
             }
         }
 
-        // === 3. 访客统计（模拟，后续可接Supabase）===
-        function showVisitors() {
-            alert('访客统计功能即将上线，当前为模拟数据。\n实际访问次数：' + Math.floor(Math.random() * 1000 + 100));
+        // === 3. 访客统计 ===
+        function showVisitorModal() {
+            visitorCount++;
+            document.getElementById('visitorCount').textContent = visitorCount;
+            document.getElementById('visitorCountModal').textContent = visitorCount;
+            openModal('visitorModal');
         }
 
-        // === 4. 留言板功能（模拟，后续可接Supabase）===
-        let messages = []; // 模拟留言数组
-
-        function openMessageModal(event) {
-            event.stopPropagation(); // 防止触发外层卡片点击
-            document.getElementById('messageModal').classList.add('active');
+        // === 4. 留言板 ===
+        function showMessageModal() {
+            openModal('messageModal');
             loadMessages();
-        }
-
-        function closeModal(id, event) {
-            if (event) event.stopPropagation();
-            document.getElementById(id).classList.remove('active');
         }
 
         function postMessage() {
             const input = document.getElementById('messageInput');
             const content = input.value.trim();
+            
             if (!content) {
                 alert('请输入留言内容');
                 return;
             }
-            messages.unshift({ content, time: new Date().toLocaleString() });
+
+            const message = {
+                content: content,
+                time: new Date().toLocaleString()
+            };
+            
+            messages.unshift(message);
             input.value = '';
             loadMessages();
             alert('留言提交成功！（模拟）');
@@ -280,42 +636,50 @@
         function loadMessages() {
             const list = document.getElementById('messageList');
             list.innerHTML = '';
+            
             if (messages.length === 0) {
-                list.innerHTML = '<p style="color:#888; text-align:center;">暂无留言，快来第一条吧！';
+                list.innerHTML = '<p style="text-align: center; color: #8899a6;">暂无留言，快来第一条吧！';
                 return;
             }
+            
             messages.forEach(msg => {
                 const div = document.createElement('div');
                 div.className = 'message-item';
-                div.innerHTML = `${msg.content}<small>${msg.time}</small>`;
+                div.innerHTML = `
+                    <div class="message-content">${msg.content}</div>
+                    <div class="message-time">${msg.time}</div>
+                `;
                 list.appendChild(div);
             });
         }
 
-        // === 5. 图片集模态框 ===
-        function openGalleryModal(event) {
-            event.stopPropagation();
-            document.getElementById('galleryModal').classList.add('active');
+        // === 5. 图片集 ===
+        function showGalleryModal() {
+            openModal('galleryModal');
         }
 
-        // === 6. 全局点击关闭模态框（点击背景）===
-        document.addEventListener('click', function(event) {
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
-                if (modal.classList.contains('active') && !modal.querySelector('.modal-content').contains(event.target)) {
-                    modal.classList.remove('active');
-                }
-            });
-        });
+        // === 6. 精选图片 ===
+        function showFeaturedModal() {
+            openModal('featuredModal');
+        }
 
-        // === 7. 防止模态框内点击触发关闭 ===
+        // === 7. 模态框控制 ===
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // === 8. 防止模态框内点击关闭 ===
         document.querySelectorAll('.modal-content').forEach(content => {
             content.addEventListener('click', function(event) {
                 event.stopPropagation();
             });
         });
 
-        // === 8. 移动端触摸优化（可选，增强体验）===
+        // === 9. 移动端触摸优化 ===
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('touchstart', function() {
                 this.style.transform = 'scale(0.98)';
@@ -325,15 +689,16 @@
             });
         });
 
-        // === 9. 初始化加载留言（模拟）===
-        loadMessages();
+        // === 10. 初始化 ===
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，所有功能已就绪！');
+        });
 
-        // === 10. 简单的错误捕获（防止脚本崩溃）===
+        // === 11. 错误处理 ===
         window.onerror = function(message, source, lineno, colno, error) {
             console.error('脚本出错：', message, '在', source, '行', lineno);
             alert('页面出现小错误，请刷新重试。错误信息：' + message);
         };
-
     </script>
 </body>
 </html>
