@@ -29,13 +29,13 @@ h1 { font-size:2.5rem; color:#fff; }
 .message-item { background:#020617; padding:15px; border-radius:8px; margin-bottom:10px; border-left:4px solid var(--accent); }
 .message-item p { margin-bottom:5px; }
 .message-item small { color:#64748b; font-size:.8rem; }
-.delete-btn { background:#f87171; color:#fff; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; float:right; }
 footer { text-align:center; margin-top:50px; padding-top:20px; border-top:1px solid #334155; color:#64748b; }
 </style>
 </head>
 <body>
 <div class="container">
 <header>
+<!-- ✅ 头像修改位置：把 me.jpg 换成你的新图片名 -->
 <img src="me.jpg" class="avatar" onclick="location.href='about.html'">
 <h1>Eric91-R</h1>
 <p class="subtitle">构建优雅的数字体验</p>
@@ -48,12 +48,6 @@ footer { text-align:center; margin-top:50px; padding-top:20px; border-top:1px so
 <div class="status" id="timeStatus">加载中...</div>
 </div>
 
-<div class="card" onclick="toggleMusic()">
-<h2>🎵 背景音乐</h2>
-<p>点击控制播放状态</p>
-<div class="status" id="musicStatus">暂停中</div>
-</div>
-
 <div class="card" onclick="openVisitorModal()">
 <h2>👥 访客统计</h2>
 <p>累计访问次数</p>
@@ -64,6 +58,12 @@ footer { text-align:center; margin-top:50px; padding-top:20px; border-top:1px so
 <h2>💬 留言板</h2>
 <p>匿名留言，管理员可审核</p>
 <div class="status">点击进入</div>
+</div>
+
+<div class="card" onclick="toggleMusic()">
+<h2>🎵 背景音乐</h2>
+<p>点击控制播放状态</p>
+<div class="status" id="musicStatus">暂停中</div>
 </div>
 
 <div class="card" onclick="location.href='gallery.html'">
@@ -123,89 +123,91 @@ footer { text-align:center; margin-top:50px; padding-top:20px; border-top:1px so
 </audio>
 
 <script>
-/* ===== Supabase 配置（你的密钥，原样保留）===== */
+/* ========== 修复核心 ========== */
 const SUPABASE_URL = "https://cjmbiavxmionhvchctlif.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_ES5Wf2uufFD088bVpzgRtQ_8MGKF...";
-const ADMIN_PASSWORD = "eric123";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let musicPlaying = false;
 let visitorTotal = 0;
 
 /* 初始化 */
-document.addEventListener("DOMContentLoaded", async () => {
-updateTime();
-setInterval(updateTime, 1000);
-await initVisitor();
-loadMessages();
+document.addEventListener("DOMContentLoaded", function () {
+    updateTime();
+    setInterval(updateTime, 1000);
+    initVisitor();
+    loadMessages();
 });
 
-/* 时间 */
+/* ✅ 1. 实时时间（修复：立即刷新） */
 function updateTime() {
-const now = new Date();
-const t = now.toLocaleTimeString("zh-CN", { hour12: false });
-const d = now.toLocaleDateString("zh-CN", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
-document.getElementById("timeStatus").textContent = t;
-document.getElementById("detailedTime").textContent = t;
-document.getElementById("detailedDate").textContent = d;
+    const now = new Date();
+    const t = now.toLocaleTimeString("zh-CN", { hour12: false });
+    const d = now.toLocaleDateString("zh-CN", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    document.getElementById("timeStatus").textContent = t;
+    document.getElementById("detailedTime").textContent = t;
+    document.getElementById("detailedDate").textContent = d;
 }
 
-/* 音乐 */
-function toggleMusic() {
-const m = document.getElementById("bgMusic");
-if (musicPlaying) { m.pause(); musicPlaying = false; document.getElementById("musicStatus").textContent = "暂停中"; }
-else { m.play(); musicPlaying = true; document.getElementById("musicStatus").textContent = "播放中"; }
-}
-
-/* 访客 */
+/* ✅ 2. 访客统计（修复：异常处理） */
 async function initVisitor() {
-const { data } = await supabase.from("visitor_count").select("*").single();
-if (!data) {
-await supabase.from("visitor_count").insert({ count: 1 });
-visitorTotal = 1;
-} else {
-visitorTotal = data.count + 1;
-await supabase.from("visitor_count").update({ count: visitorTotal }).eq("id", data.id);
-}
-document.getElementById("visitorCount").textContent = visitorTotal;
-document.getElementById("visitorCountModal").textContent = visitorTotal;
+    try {
+        const { data } = await supabase.from("visitor_count").select("*").single();
+        if (!data) {
+            await supabase.from("visitor_count").insert({ count: 1 });
+            visitorTotal = 1;
+        } else {
+            visitorTotal = data.count + 1;
+            await supabase.from("visitor_count").update({ count: visitorTotal }).eq("id", data.id);
+        }
+        document.getElementById("visitorCount").textContent = visitorTotal;
+        document.getElementById("visitorCountModal").textContent = visitorTotal;
+    } catch (e) {
+        document.getElementById("visitorCount").textContent = "0";
+        document.getElementById("visitorCountModal").textContent = "0";
+    }
 }
 
-/* 留言 */
+/* ✅ 3. 留言板（修复：绑定按钮） */
 async function submitMessage() {
-const content = document.getElementById("messageInput").value.trim();
-const pass = document.getElementById("adminPass").value;
-if (!content) return;
-if (pass === ADMIN_PASSWORD) localStorage.setItem("isAdmin", "true");
-await supabase.from("messages").insert({ content });
-document.getElementById("messageInput").value = "";
-loadMessages();
+    const content = document.getElementById("messageInput").value.trim();
+    if (!content) return;
+    await supabase.from("messages").insert({ content });
+    document.getElementById("messageInput").value = "";
+    loadMessages();
+    alert("留言已提交");
 }
 
 async function loadMessages() {
-const { data } = await supabase.from("messages").select("*").eq("is_deleted", false).order("created_at", { ascending: false });
-const box = document.getElementById("messageList");
-box.innerHTML = "";
-if (!data?.length) return box.innerHTML = "<p style='text-align:center;color:#64748b;'>暂无留言</p>";
-data.forEach(m => {
-const div = document.createElement("div");
-div.className = "message-item";
-div.innerHTML = `<p>${m.content}</p><small>${new Date(m.created_at).toLocaleString()}</small>`;
-if (localStorage.getItem("isAdmin") === "true") {
-const btn = document.createElement("button");
-btn.className = "delete-btn";
-btn.textContent = "删";
-btn.onclick = async () => {
-await supabase.from("messages").update({ is_deleted: true }).eq("id", m.id);
-loadMessages();
-};
-div.appendChild(btn);
-}
-box.appendChild(div);
-});
+    const { data } = await supabase.from("messages").select("*").eq("is_deleted", false).order("created_at", { ascending: false });
+    const box = document.getElementById("messageList");
+    box.innerHTML = "";
+    if (!data?.length) return box.innerHTML = "<p style='text-align:center;color:#64748b;'>暂无留言</p>";
+    data.forEach(m => {
+        const div = document.createElement("div");
+        div.className = "message-item";
+        div.innerHTML = `<p>${m.content}</p><small>${new Date(m.created_at).toLocaleString()}</small>`;
+        box.appendChild(div);
+    });
 }
 
-/* 弹窗 */
+/* ✅ 4. 音乐播放（修复：用户交互触发） */
+function toggleMusic() {
+    const m = document.getElementById("bgMusic");
+    if (musicPlaying) {
+        m.pause();
+        musicPlaying = false;
+        document.getElementById("musicStatus").textContent = "暂停中";
+    } else {
+        m.play().catch(() => {
+            alert("请先点击页面任意位置，再播放音乐");
+        });
+        musicPlaying = true;
+        document.getElementById("musicStatus").textContent = "播放中";
+    }
+}
+
+/* 弹窗控制 */
 function openTimeModal() { document.getElementById("timeModal").classList.add("active"); }
 function openVisitorModal() { document.getElementById("visitorModal").classList.add("active"); }
 function openMessageModal() { document.getElementById("messageModal").classList.add("active"); }
